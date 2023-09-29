@@ -16,6 +16,8 @@ from region import RegionBlueprint, resolve_regions
 # https://www.youtube.com/watch?v=gxAaO2rsdIs
 
 
+pygame.init()
+
 SCREEN_WIDTH, SCREEN_HEIGHT = (1920, 1080)
 FULL_WIDTH, FULL_HEIGHT = (SCREEN_WIDTH*5, SCREEN_HEIGHT*5)
 SETTINGS_WIDTH = 450
