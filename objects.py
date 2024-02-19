@@ -264,9 +264,8 @@ class Person(pygame.sprite.Sprite):
         elif abs(self.rect.center[1] - self.active_bounds.bottom) < 10:
             self.direction = pygame.Vector2(0, -1)
             adjusted = True
-        if adjusted:
-            if random.random() < 0.5:
-                self.direction.rotate_ip(random.randint(-80, 80))
+        if adjusted and random.random() < 0.5:
+            self.direction.rotate_ip(random.randint(-80, 80))
 
     def get_nearby(self, persons: pygame.sprite.Group) -> list[Person]:
         """Get nearby people within distancing radius."""
@@ -420,7 +419,7 @@ class Chart(pygame.sprite.Sprite):
                     self.data.append(self.event_marker)
                     self.event_marker = None
                 else:
-                    total = sum(value for value in data.values())
+                    total = sum(data.values())
                     entry = tuple(data[value[0]]/total for value in self.values)
                     self.data.append(entry)  # type: ignore
                     if (overflow := len(self.data) - chart_width):
@@ -428,10 +427,10 @@ class Chart(pygame.sprite.Sprite):
             self.last_update = perf_counter()
         # draw existing data
         for i in range(chart_width):
-            vertical_start = 0
             if all(isinstance(member, int) for member in self.data[i]):
                 pygame.draw.line(self.surf, self.data[i], (i, chart_height), (i, 0))
             else:
+                vertical_start = 0
                 pygame.draw.line(self.surf, (255, 255, 255), (i, chart_height), (i, 0))
                 for j, value in enumerate(self.data[i]):
                     length = round(value*chart_height)

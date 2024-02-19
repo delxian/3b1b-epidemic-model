@@ -106,10 +106,10 @@ field_square_x_offset = int((field.size[0]-field.size[1])/2)
 # split into 4 squares
 new_communities: list[RegionBlueprint] = resolve_regions(
     (field_square_width, field_square_width),
-    ((int(field_square_width/2),
-      ((int(field_square_width/2), "TL"), (int(field_square_width/2), "BL"))),
-     (int(field_square_width/2),
-      ((int(field_square_width/2), "TR"), (int(field_square_width/2), "BR")))),
+    ((field_square_width // 2,
+      ((field_square_width // 2, "TL"), (field_square_width // 2, "BL"))),
+     (field_square_width // 2,
+      ((field_square_width // 2, "TR"), (field_square_width // 2, "BR")))),
     border_thickness=10
     )
 communities, community_dict = set_up_communities(new_communities, field_square_x_offset)
@@ -120,7 +120,7 @@ community_cycler = cycle((top_left, top_right, bottom_right, bottom_left))
 persons = pygame.sprite.Group()
 distancing_percent = NumericVariable("distancing percent", 100, ADJUST_DISTANCING_PERCENT)
 distancing_strength = NumericVariable("distancing strength", 1)
-for i in range(DEFAULT_PERSON_COUNT):
+for _ in range(DEFAULT_PERSON_COUNT):
     persons.add(Person(Bounds(next(community_cycler), field),
                        distancing_percent, distancing_strength))
 
@@ -201,12 +201,11 @@ while running:
             mouse_down = mouse_position
             if event.button == 1:
                 if field.rect.collidepoint(*mouse_position):
-                    community = (hovered_community
-                                 if communities_toggle.value and
-                                 (hovered_community := next(
-                                     (community for community in communities
-                                      if community.rect.collidepoint(*mouse_position)), None))
-                                 else next(community_cycler))
+                    if communities_toggle.value:
+                        if (hovered_community := next(
+                            (community for community in communities
+                             if community.rect.collidepoint(*mouse_position)), None)):
+                            community = hovered_community
                     persons.add(
                         Person(Bounds(community, field),
                                distancing_percent=distancing_percent,

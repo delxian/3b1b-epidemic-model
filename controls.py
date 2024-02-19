@@ -145,8 +145,8 @@ class Slider(pygame.sprite.Sprite):
         self.label = font.render(f"{label}=", True, TEXT_COLOR)
         self.scale = scale
         self.decimals = decimals
-        max_text_value = (str(scale[1]) if not self.decimals
-                          else str(round(scale[1]*1.0, self.decimals)))
+        max_text_value = (str(round(scale[1]*1.0, self.decimals))
+                          if self.decimals else str(scale[1]))
         max_text = font.render(max_text_value, True, TEXT_COLOR)
         self.size = (self.width + self.label.get_width()
                      + font.get_height() + max_text.get_width(), font.get_height())
@@ -183,8 +183,8 @@ class Slider(pygame.sprite.Sprite):
                          (self.width, self.size[1]/2), self.bar_thickness)
         pygame.draw.rect(self.surf, box_color, self.box_rect)
         self.surf.blit(self.label, (self.width + font.get_height()/2, 0))
-        value = (int(self.variable.value) if not self.decimals
-                 else round(self.variable.value, self.decimals))
+        value = (round(self.variable.value, self.decimals)
+                 if self.decimals else int(self.variable.value))
         value_text = font.render(str(value), True, TEXT_COLOR)
         self.surf.blit(value_text, (self.width + self.label.get_width() + font.get_height()/2, 0))
 
